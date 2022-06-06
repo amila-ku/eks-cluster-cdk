@@ -1,12 +1,12 @@
 github.com/Masterminds/semver/v3 v3.1.1 h1:hLg3sBzpNErnxhQtUy/mmLR2I9foDujNK030IGemrRc=
 github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
-github.com/aws/aws-cdk-go/awscdk/v2 v2.0.0 h1:nm0nKd9m4yPSWtvwluEl6nyHXUXmmxUQghLaqYj5jj4=
-github.com/aws/aws-cdk-go/awscdk/v2 v2.0.0/go.mod h1:2PrsMzp7CioaiAHHEr8zCVkbMIKp+sZs/S15kTkLUH0=
+github.com/aws/aws-cdk-go/awscdk/v2 v2.2.0 h1:jlg7O9AgkIl3hALNy/vXkTC8KfnJ5V7WCFdrAFr9NpE=
+github.com/aws/aws-cdk-go/awscdk/v2 v2.2.0/go.mod h1:HBrUWuxQB3EBqdLT2pD+5YrVHOf0UkE6g0uQqIfKlW0=
 github.com/aws/constructs-go/constructs/v10 v10.0.9 h1:YGk+deTAD3rgyANybjOtaoVrjC7HZZtALeC872avWFQ=
 github.com/aws/constructs-go/constructs/v10 v10.0.9/go.mod h1:RC6w8bOwxLmPX7Jfo9dkEZ9iVfgH4QnaVnfWvaNOHy0=
 github.com/aws/jsii-runtime-go v1.37.0/go.mod h1:6tZnlstx8bAB3vnLFF9n8bbkI//LDblAek9zFyMXV3E=
-github.com/aws/jsii-runtime-go v1.46.0 h1:FBhMNkkcKlP5U/3+K6Yt0jNs8l0vJqD/atgihafpKmQ=
-github.com/aws/jsii-runtime-go v1.46.0/go.mod h1:6tZnlstx8bAB3vnLFF9n8bbkI//LDblAek9zFyMXV3E=
+github.com/aws/jsii-runtime-go v1.47.0 h1:iaL6yPegP9+yBIARJdccy0QjmvjH5y9eu6nSbpEgZE4=
+github.com/aws/jsii-runtime-go v1.47.0/go.mod h1:6tZnlstx8bAB3vnLFF9n8bbkI//LDblAek9zFyMXV3E=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
