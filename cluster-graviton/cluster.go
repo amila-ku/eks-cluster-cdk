@@ -2,11 +2,12 @@ package main
 
 import (
 	"os"
+
 	"github.com/aws/aws-cdk-go/awscdk/v2"
-	"github.com/aws/aws-cdk-go/awscdk/v2/awseks"
+	// "github.com/aws/aws-cdk-go/awscdk/v2/awsautoscaling"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsec2"
-	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
-	"github.com/aws/aws-cdk-go/awscdk/v2/awsautoscaling"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awseks"
+	// "github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 )
@@ -25,47 +26,67 @@ func NewClusterStack(scope constructs.Construct, id string, props *ClusterStackP
 	vpc := awsec2.NewVpc(stack, jsii.String("EKSVpc"), nil) // Create a new VPC for our cluster
 
 	// IAM role for our EC2 worker nodes
-	workerRole := awsiam.NewRole(stack, jsii.String("EKSWorkerRole"), &awsiam.RoleProps{
-		AssumedBy: awsiam.NewServicePrincipal(jsii.String("ec2.amazonaws.com"), nil),
-	});
+	// workerRole := awsiam.NewRole(stack, jsii.String("EKSWorkerRole"), &awsiam.RoleProps{
+	// 	AssumedBy: awsiam.NewServicePrincipal(jsii.String("ec2.amazonaws.com"), nil),
+	// });
+
+		// See: https://kubernetes-sigs.github.io/aws-load-balancer-controller
+	// https://github.com/aws/aws-cdk-go/blob/main/awscdk/awseks/awseks.go
+
+		// var policy interface{}
+	// albController := awseks.NewAlbController(stack, jsii.String("MyAlbController"), &awseks.AlbControllerProps{
+	// 	cluster: eksCluster,
+	// 	version: awseks.AlbControllerVersion_V2_4_1(),
+		
+		// the properties below are optional
+		// policy: policy,
+		// repository: jsii.String("repository"),
+	//})
 
 	eksCluster := awseks.NewCluster(stack, jsii.String("Cluster"), &awseks.ClusterProps{
 		Vpc: vpc,
-		DefaultCapacity: jsii.Number(0), // we want to manage capacity our selves
+		DefaultCapacity: jsii.Number(0), // manage capacity with managed nodegroups later
 		Version: awseks.KubernetesVersion_V1_21(),
+		// AlbController: &awseks.AlbControllerOptions{
+		// 	version: awseks.AlbControllerVersion_V2_4_1(),
+		// 	// the properties below are optional
+		// 	// policy: policy,
+		// 	// repository: jsii.String("repository"),
+		// },
+		AlbController: &awseks.AlbControllerOptions {
+			Version: awseks.AlbControllerVersion_V2_3_0(),
+		},
 	})
 
-	onDemandASG := awsautoscaling.NewAutoScalingGroup(stack, jsii.String("OnDemandASG"), &awsautoscaling.AutoScalingGroupProps{
-		Vpc: vpc,
-		Role: workerRole,
-		MinCapacity: jsii.Number(1),
-		MaxCapacity: jsii.Number(10),
-		InstanceType: awsec2.NewInstanceType(jsii.String("t4g.micro")),
+	eksCluster.AddNodegroupCapacity(jsii.String("custom-node-group"), &awseks.NodegroupOptions{
+		InstanceTypes: &[]awsec2.InstanceType{
+			awsec2.NewInstanceType(jsii.String("t4g.micro")),
+		},
+		MinSize: jsii.Number(2),
+		DiskSize: jsii.Number(100),
+		AmiType: awseks.NodegroupAmiType_AL2_ARM_64,
+	})
 
-		MachineImage: awseks.NewEksOptimizedImage(&awseks.EksOptimizedImageProps{
-			CpuArch: awseks.CpuArch_ARM_64, 	// https://pkg.go.dev/github.com/aws/aws-cdk-go/awscdk/v2@v2.20.0/awseks#CpuArch
-			KubernetesVersion: jsii.String("1.21"),
-			NodeType: awseks.NodeType_STANDARD,
-		}),
-	});
+	// onDemandASG := awsautoscaling.NewAutoScalingGroup(stack, jsii.String("OnDemandASG"), &awsautoscaling.AutoScalingGroupProps{
+	// 	Vpc: vpc,
+	// 	Role: workerRole,
+	// 	MinCapacity: jsii.Number(1),
+	// 	MaxCapacity: jsii.Number(10),
+	// 	InstanceType: awsec2.NewInstanceType(jsii.String("t4g.micro")),
 
-
-	// See: https://kubernetes-sigs.github.io/aws-load-balancer-controller
-  // https://github.com/aws/aws-cdk-go/blob/main/awscdk/awseks/awseks.go
-
-	  // var policy interface{}
-  // albController := awseks.NewAlbController(this, jsii.String("MyAlbController"), &albControllerProps{
-  // 	cluster: eksCluster,
-  // 	version: awseks.albControllerVersion_V2_4_1(),
-	//
-  // 	// the properties below are optional
-  // 	// policy: policy,
-  // 	// repository: jsii.String("repository"),
-  // })
+	// 	MachineImage: awseks.NewEksOptimizedImage(&awseks.EksOptimizedImageProps{
+	// 		CpuArch: awseks.CpuArch_ARM_64, 	// https://pkg.go.dev/github.com/aws/aws-cdk-go/awscdk/v2@v2.20.0/awseks#CpuArch
+	// 		KubernetesVersion: jsii.String("1.21"),
+	// 		NodeType: awseks.NodeType_STANDARD,
+	// 	}),
+	// });
 
 
-	eksCluster.ConnectAutoScalingGroupCapacity(onDemandASG, &awseks.AutoScalingGroupOptions{});
-	eksCluster.AlbController()
+
+
+
+	// eksCluster.ConnectAutoScalingGroupCapacity(onDemandASG, &awseks.AutoScalingGroupOptions{});
+	//eksCluster.AlbController()
 
 	return stack
 }
