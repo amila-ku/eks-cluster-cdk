@@ -1,0 +1,18 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: cluster-graviton-1
+  region: eu-central-1
+
+
+nodeGroups:
+  - name: ng-graviton-central-1a
+    instanceType: t3.medium
+    desiredCapacity: 1
+    availabilityZones: ["eu-central-1a"]
+  - name: ng-graviton-central-1b
+    instanceType: t3.medium
+    desiredCapacity: 1
+    availabilityZones: ["eu-central-1b"]
